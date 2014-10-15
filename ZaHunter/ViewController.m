@@ -21,6 +21,18 @@
     self.myLocationManager = [[CLLocationManager alloc] init];
     [self.myLocationManager requestWhenInUseAuthorization];
     self.myLocationManager.delegate = self;
+    [self.myLocationManager startUpdatingLocation];
 }
+
+-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    for (CLLocation *location in locations) {
+        if (location.verticalAccuracy < 1000 && location.horizontalAccuracy < 1000) {
+            NSLog(@"%@", location);
+            [self.myLocationManager stopUpdatingLocation];
+            break;
+        }
+    }
+}
+
 
 @end
