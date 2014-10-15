@@ -12,6 +12,8 @@
 
 @interface ViewController () <CLLocationManagerDelegate>
 @property CLLocationManager *myLocationManager;
+@property (weak, nonatomic) IBOutlet UITableView *pizzaJointsTableView;
+@property NSMutableArray *pizzaJoints;
 
 @end
 
@@ -19,10 +21,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.pizzaJoints = [[NSMutableArray alloc] init];
     self.myLocationManager = [[CLLocationManager alloc] init];
     [self.myLocationManager requestWhenInUseAuthorization];
     self.myLocationManager.delegate = self;
     [self.myLocationManager startUpdatingLocation];
+    [self.pizzaJoints addObject:@"toasty 1"];
+    [self.pizzaJoints addObject:@"toasty 2"];
+    [self.pizzaJoints addObject:@"toasty 3"];
 }
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
@@ -53,10 +59,40 @@
     request.region = MKCoordinateRegionMake(location.coordinate, MKCoordinateSpanMake(1, 1));
     MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
     [search startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error) {
-        NSArray *mapItems = response.mapItems;
-        MKMapItem *mapItem = mapItems.firstObject;
-        NSLog(@"%@", mapItem.name);
+//        self.pizzaJoints = response.mapItems;
+        MKMapItem *pizzaJoint = self.pizzaJoints.firstObject;
+//        NSLog(@"%@", pizzaJoint.name);
     }];
 }
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    //    NSDictionary *pizzaJointsDictionary = [self.pizzaJoints objectAtIndex:indexPath.row];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyCellID"];
+    cell.textLabel.text = @"toast";
+    return cell;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 3;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @end
