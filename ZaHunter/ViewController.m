@@ -26,9 +26,6 @@
     [self.myLocationManager requestWhenInUseAuthorization];
     self.myLocationManager.delegate = self;
     [self.myLocationManager startUpdatingLocation];
-    [self.pizzaJoints addObject:@"toasty 1"];
-    [self.pizzaJoints addObject:@"toasty 2"];
-    [self.pizzaJoints addObject:@"toasty 3"];
 }
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
@@ -44,7 +41,6 @@
 
 -(void)reverseGeocoding:(CLLocation *)location {
     CLGeocoder *geocoder = [CLGeocoder new];
-
     [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
         CLPlacemark *placemark = placemarks.firstObject;
         NSString *address = [NSString stringWithFormat:@"%@ %@ \n %@", placemark.subThoroughfare, placemark.thoroughfare, placemark.locality];
@@ -59,9 +55,9 @@
     request.region = MKCoordinateRegionMake(location.coordinate, MKCoordinateSpanMake(1, 1));
     MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
     [search startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error) {
-//        self.pizzaJoints = response.mapItems;
-        MKMapItem *pizzaJoint = self.pizzaJoints.firstObject;
-//        NSLog(@"%@", pizzaJoint.name);
+        self.pizzaJoints = [response.mapItems mutableCopy];
+//        MKMapItem *pizzaJoint = self.pizzaJoints.firstObject;
+        NSLog(@"%@", self.pizzaJoints);
     }];
 }
 
