@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import <CoreLocation/CoreLocation.h>
+#import <MapKit/MapKit.h>
 
 @interface ViewController () <CLLocationManagerDelegate>
 @property CLLocationManager *myLocationManager;
@@ -42,9 +43,20 @@
         CLPlacemark *placemark = placemarks.firstObject;
         NSString *address = [NSString stringWithFormat:@"%@ %@ \n %@", placemark.subThoroughfare, placemark.thoroughfare, placemark.locality];
         NSLog(@"%@", address);
+        [self findPizzaJoint:placemark.location];
     }];
 }
 
-
+-(void)findPizzaJoint:(CLLocation *)location {
+    MKLocalSearchRequest *request = [MKLocalSearchRequest new];
+    request.naturalLanguageQuery = @"pizza";
+    request.region = MKCoordinateRegionMake(location.coordinate, MKCoordinateSpanMake(1, 1));
+    MKLocalSearch *search = [[MKLocalSearch alloc] initWithRequest:request];
+    [search startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error) {
+        NSArray *mapItems = response.mapItems;
+        MKMapItem *mapItem = mapItems.firstObject;
+        NSLog(@"%@", mapItem.name);
+    }];
+}
 
 @end
